@@ -27,18 +27,7 @@ router.get("/:id", async (req, res) => {
 
 // Create a submission
 router.post("/", async (req, res) => {
-  // const submission = new Submission({
-  //   name: req.body.name,
-  //   email: req.body.email,
-  //   message: req.body.message
-  // });
 
-  // try {
-  //   const newSubmission = await submission.save();
-  //   res.status(201).json(newSubmission);
-  // } catch (err) {
-  //   res.status(400).json({ message: err.message });
-  // }
 
   const { name, email, message, status } = req.body;
 
