@@ -8,7 +8,7 @@ const LAST_SYNC_FILE = "./lastSync.json";
 
 async function syncToSheets() {
   const auth = new google.auth.GoogleAuth({
-    keyFile: "./auth/credentials.json", 
+    credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT),
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
 
