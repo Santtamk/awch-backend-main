@@ -27,8 +27,6 @@ router.get("/:id", async (req, res) => {
 
 // Create a submission
 router.post("/", async (req, res) => {
-
-
   const { name, email, message, status } = req.body;
 
   const newSubmission = new Submission({
@@ -41,10 +39,27 @@ router.post("/", async (req, res) => {
   try {
     const saved = await newSubmission.save();
 
-    // 👉 Trigger Google Sheets sync after saving
-    await syncToSheets();
+    try {
+      //  Trigger Google Sheets sync after saving
+      await syncToSheets();
 
-    res.status(201).json(saved);
+      //  All good
+      res.status(201).json({
+        success: true,
+        message: "Form submitted successfully, we will get back to you soon.",
+        submission: saved,
+      });
+    } catch (syncError) {
+      console.error("Google Sheets sync failed:", syncError.message);
+
+      //  Respond with success but indicate sync failure
+      res.status(201).json({
+        success: true,
+        message:
+          "Your form was submitted, but we couldn't sync it to our system. Please contact the hospital to confirm your submission.",
+        submission: saved,
+      });
+    }
   } catch (err) {
     console.error("Error saving submission:", err);
     res.status(400).json({ message: err.message });
